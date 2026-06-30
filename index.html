@@ -66,7 +66,6 @@
             justify-content: center;
             box-shadow: inset 0 0 0 3px var(--bege-claro);
         }
-        /* Desenho estilizado da letra A */
         .monograma-ap::before {
             content: "A";
             font-family: 'Georgia', serif;
@@ -76,7 +75,6 @@
             position: absolute;
             transform: translate(-6px, -4px);
         }
-        /* Desenho estilizado da letra P entrelaçada */
         .monograma-ap::after {
             content: "P";
             font-family: 'Georgia', serif;
@@ -165,10 +163,6 @@
             box-sizing: border-box;
             font-size: 14px;
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--bege-escuro);
-        }
 
         /* VITRINE DE PRODUTOS */
         .vitrine-grid {
@@ -191,7 +185,6 @@
             box-shadow: 0 6px 15px rgba(92, 74, 60, 0.06);
         }
 
-        /* CARROSSEL/MINIATURAS DE IMAGENS DO PRODUTO */
         .container-imagens-produto {
             width: 100%;
             height: 150px;
@@ -224,85 +217,25 @@
             cursor: pointer;
         }
 
-        .prod-nome {
-            font-weight: 600;
-            font-size: 15px;
-            margin: 8px 0 4px;
-            color: var(--texto-escuro);
-        }
-        .prod-preco {
-            color: var(--bege-escuro);
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
+        .prod-nome { font-weight: 600; font-size: 15px; margin: 8px 0 4px; color: var(--texto-escuro); }
+        .prod-preco { color: var(--bege-escuro); font-weight: 700; font-size: 16px; margin-bottom: 10px; }
 
-        /* BOTÕES ESTILIZADOS */
         .btn-comprar {
-            background-color: var(--bege-escuro);
-            color: #FFFFFF;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-            transition: background 0.2s;
+            background-color: var(--bege-escuro); color: #FFFFFF; border: none; padding: 10px;
+            width: 100%; border-radius: 4px; cursor: pointer; font-weight: 600;
+            text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
         }
-        .btn-comprar:hover {
-            background-color: #45372C;
-        }
+        .btn-comprar:hover { background-color: #45372C; }
 
-        /* CARRINHO E CHECKOUT LATERAL (Padrão e-commerce de pedidos) */
-        .checkout-lateral {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .lista-carrinho {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-        .item-carrinho {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            padding: 8px 0;
-            border-bottom: 1px dashed var(--bege-claro);
-        }
-        .resumo-linha {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 700;
-            font-size: 16px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid var(--bege-claro);
-            color: var(--bege-escuro);
-        }
+        /* CARRINHO E CHECKOUT LATERAL */
+        .checkout-lateral { display: flex; flex-direction: column; gap: 20px; }
+        .lista-carrinho { list-style: none; padding: 0; margin: 15px 0; max-height: 180px; overflow-y: auto; }
+        .item-carrinho { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px dashed var(--bege-claro); }
+        .resumo-linha { display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--bege-claro); color: var(--bege-escuro); }
 
-        /* ÁREA DE RESULTADO DO PAGAMENTO */
-        .painel-pagamento {
-            margin-top: 15px;
-            padding: 15px;
-            background: var(--bg-principal);
-            border: 1px solid var(--bege-destaque);
-            border-radius: 6px;
-            text-align: center;
-        }
-        #qrcode-output {
-            display: flex;
-            justify-content: center;
-            margin: 15px 0;
-        }
+        .painel-pagamento { margin-top: 15px; padding: 15px; background: var(--bg-principal); border: 1px solid var(--bege-destaque); border-radius: 6px; text-align: center; }
+        #qrcode-output { display: flex; justify-content: center; margin: 15px 0; }
         
-        /* Layout responsivo móvel */
         @media (max-width: 850px) {
             .layout-loja { grid-template-columns: 1fr; }
             .grid-form { grid-template-columns: 1fr; }
@@ -329,7 +262,6 @@
     <div class="layout-loja">
         
         <main class="secao-produtos">
-            
             <section class="card-sistema">
                 <h2>Painel Administrativo: Adicionar Produto</h2>
                 <form id="cadastro-form">
@@ -356,34 +288,16 @@
             <section class="card-sistema">
                 <h2>Vitrine de Produtos</h2>
                 <div class="vitrine-grid" id="vitrine">
-                    <div class="produto-item">
-                        <div class="container-imagens-produto">
-                            <span style="color:var(--bege-medio); font-size:12px;">Imagem do Produto</span>
-                        </div>
-                        <div class="prod-nome">Coleira Aurora Elegance</div>
-                        <div class="prod-preco">R$ 45.00</div>
-                        <button class="btn-comprar" onclick="adicionarAoCarrinho('Coleira Aurora Elegance', 45.00)">Selecionar</button>
                     </div>
-                    <div class="produto-item">
-                        <div class="container-imagens-produto">
-                            <span style="color:var(--bege-medio); font-size:12px;">Imagem do Produto</span>
-                        </div>
-                        <div class="prod-nome">Comedouro Duplo Cerâmica</div>
-                        <div class="prod-preco">R$ 120.00</div>
-                        <button class="btn-comprar" onclick="adicionarAoCarrinho('Comedouro Duplo Cerâmica', 120.00)">Selecionar</button>
-                    </div>
-                </div>
             </section>
         </main>
 
         <aside class="checkout-lateral">
-            
             <div class="card-sistema">
                 <h2>Sacola de Pedidos</h2>
                 <ul class="lista-carrinho" id="itens-carrinho-lista">
-                    <li style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>
+                    <li id="sacola-vazia-aviso" style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>
                 </ul>
-                
                 <div class="resumo-linha">
                     <span>Total do Pedido:</span>
                     <span id="valor-total-carrinho">R$ 0,00</span>
@@ -419,43 +333,32 @@
     </div>
 
     <script>
-        // Estrutura de dados interna para simular o banco de dados da loja
         let totalCompra = 0;
         let itensNoCarrinho = [];
 
-        // Função do painel administrativo para adicionar produtos com visualização de imagens
         function adicionarProdutoAoCatalogo() {
             const nome = document.getElementById('nome').value;
             const preco = parseFloat(document.getElementById('preco').value);
             const inputImagens = document.getElementById('imagens');
 
-            if (!nome || isNaN(preco)) {
-                alert("Por favor, preencha corretamente os dados do produto.");
-                return;
-            }
-            if (inputImagens.files.length !== 3) {
-                alert("Selecione exatamente 3 arquivos de imagem para este produto.");
-                return;
-            }
+            if (!nome || isNaN(preco)) { alert("Por favor, preencha corretamente os dados."); return; }
+            if (inputImagens.files.length !== 3) { alert("Selecione exatamente 3 imagens."); return; }
 
-            // Captura os arquivos de imagem convertendo para ObjectURLs temporárias para exibição em tela
             const imgUrls = [];
-            for(let i=0; i<3; i++) {
-                imgUrls.push(URL.createObjectURL(inputImagens.files[i]));
-            }
+            for(let i=0; i<3; i++) { imgUrls.push(URL.createObjectURL(inputImagens.files[i])); }
 
             const vitrine = document.getElementById('vitrine');
+            const idUnico = nome.replace(/\s+/g, '') + Date.now();
             
-            // Renderiza o novo produto estruturado com carrossel tático de miniaturas no catálogo
             const produtoHTML = `
                 <div class="produto-item">
                     <div class="container-imagens-produto">
-                        <img src="${imgUrls[0]}" id="main-img-${nome.replace(/\s+/g, '')}" class="preview-img-principal" alt="${nome}">
+                        <img src="${imgUrls[0]}" id="main-img-${idUnico}" class="preview-img-principal" alt="${nome}">
                     </div>
                     <div class="miniaturas-linha">
-                        <img src="${imgUrls[0]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[0]}'">
-                        <img src="${imgUrls[1]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[1]}'">
-                        <img src="${imgUrls[2]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[2]}'">
+                        <img src="${imgUrls[0]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${idUnico}').src='${imgUrls[0]}'">
+                        <img src="${imgUrls[1]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${idUnico}').src='${imgUrls[1]}'">
+                        <img src="${imgUrls[2]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${idUnico}').src='${imgUrls[2]}'">
                     </div>
                     <div class="prod-nome">${nome}</div>
                     <div class="prod-preco">R$ ${preco.toFixed(2)}</div>
@@ -467,13 +370,11 @@
             document.getElementById('cadastro-form').reset();
         }
 
-        // Adiciona itens selecionados à sacola lateral
         function adicionarAoCarrinho(nome, preco) {
             itensNoCarrinho.push({nome, preco});
             atualizarInterfaceCarrinho();
         }
 
-        // Re-renderiza o estado da sacola de compras
         function atualizarInterfaceCarrinho() {
             const lista = document.getElementById('itens-carrinho-lista');
             lista.innerHTML = "";
@@ -487,48 +388,46 @@
 
             itensNoCarrinho.forEach(item => {
                 totalCompra += item.preco;
-                lista.innerHTML += `
-                    <li class="item-carrinho">
-                        <span>${item.nome}</span>
-                        <strong>R$ ${item.preco.toFixed(2)}</strong>
-                    </li>
-                `;
+                lista.innerHTML += `<li class="item-carrinho"><span>${item.nome}</span><strong>R$ ${item.preco.toFixed(2)}</strong></li>`;
             });
 
             document.getElementById('valor-total-carrinho').innerText = `R$ ${totalCompra.toFixed(2)}`;
         }
 
-        // Monitora as opções do seletor de pagamento
         function alternarCamposParcelamento() {
             const metodo = document.getElementById('metodo-pagamento').value;
             document.getElementById('wrapper-parcelas').style.display = (metodo === 'parcelado') ? 'block' : 'none';
         }
 
-        // Processa o fechamento de checkout simulando regras de servidores de e-commerce
         function fecharPedidoLoja() {
-            if (totalCompra <= 0) {
-                alert("Sua sacola de compras está vazia! Adicione ou selecione produtos primeiro.");
-                return;
-            }
+            if (totalCompra <= 0) { alert("Sua sacola está vazia!"); return; }
 
             const metodo = document.getElementById('metodo-pagamento').value;
             const painelResultado = document.getElementById('checkout-resultado');
             
             painelResultado.style.display = "block";
-            painelResultado.innerHTML = ""; // Reseta renderização prévia
+            painelResultado.innerHTML = ""; 
 
             if (metodo === 'pix') {
                 painelResultado.innerHTML = `
                     <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Código QR Code Pix Gerado</h3>
                     <p style="font-size:13px; color:var(--texto-claro);">Valor final: <strong>R$ ${totalCompra.toFixed(2)}</strong></p>
                     <div id="qrcode-output"></div>
-                    <p style="font-size:11px; color:var(--bege-medio);">A confirmação é feita instantaneamente pelo sistema AuroraPatas.</p>
+                    <p style="font-size:11px; color:var(--bege-medio);">A confirmação é feita instantaneamente.</p>
                 `;
 
-                // String criptografada padrão EMV/BR Code para PIX Estático dinâmico baseada no valor total acumulado
-                const stringPixECommerce = `00020101021126360014br.gov.bcb.pix0114suachavepix5204000053039865405${totalCompra.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
+                /* =========================================================================
+                   ONDE EDITAR O PIX: 
+                   Substitua a palavra 'suachavepix' abaixo pela sua chave Pix real.
+                   Exemplos: 
+                   Se for CNPJ: 12345678000199
+                   Se for E-mail: financeiro@aurorapatas.com
+                   ========================================================================= */
+                const minhaChavePix = "12308608358"; 
 
-                // Geração em tela utilizando a biblioteca externa
+                // Montagem da estrutura padrão BR Code regulamentada pelo Banco Central
+                const stringPixECommerce = `00020101021126360014br.gov.bcb.pix0114${minhaChavePix}5204000053039865405${totalCompra.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
+
                 new QRCode(document.getElementById("qrcode-output"), {
                     text: stringPixECommerce,
                     width: 150,
