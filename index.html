@@ -1,21 +1,11 @@
-import base64
-import io
-import os
-from flask import Flask, jsonify, render_template_string, request
-
-app = Flask(__name__)
-
-# Configuração para salvar as imagens dos produtos enviados
-UPLOAD_FOLDER = 'static/uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# O HTML e CSS integrados diretamente no código
-HTML_PAGE = """
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AuroraPatas - Pet Shop</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
         /* Cores: Bege (#F5F2EB, #5c4a3c) e Branco (#FFFFFF) */
         body {
@@ -37,7 +27,7 @@ HTML_PAGE = """
             align-items: center;
             gap: 15px;
         }
-        /* Logo com as Iniciais A e P */
+        /* Logo Bonita com as Iniciais A e P */
         .logo-circle {
             background: linear-gradient(135deg, #dfcbb5, #f5f2eb);
             color: #5c4a3c;
@@ -100,18 +90,19 @@ HTML_PAGE = """
     <div class="container">
         <section class="card">
             <h2>Adicionar Produto</h2>
-            <form action="/salvar-produto" method="POST" enctype="multipart/form-data">
+            <form id="form-produto">
                 <label>Nome do Produto:</label>
-                <input type="text" name="nome" required>
+                <input type="text" id="nome-produto" required>
 
                 <label>Valor (R$):</label>
-                <input type="number" id="valor-produto" step="0.01" name="preco" required>
+                <input type="number" id="valor-produto" step="0.01" required>
 
-                <label>Imagens do Produto (Selecione exatamente 3):</label>
-                <input type="file" name="imagens" accept="image/*" multiple required>
+                <label>Imagens do Produto (Máx 3):</label>
+                <input type="file" id="imagens-produto" accept="image/*" multiple required>
 
-                <button type="submit" class="btn">Cadastrar Produto</button>
+                <button type="button" onclick="simularCadastro()" class="btn">Cadastrar Produto</button>
             </form>
+            <div id="resultado-cadastro" style="margin-top: 15px; color: green; font-weight: bold; text-align: center;"></div>
         </section>
 
         <section class="card">
@@ -142,87 +133,51 @@ HTML_PAGE = """
     </div>
 
     <script>
+        function simularCadastro() {
+            const nome = document.getElementById('nome-produto').value;
+            const inputImg = document.getElementById('imagens-produto');
+            
+            if (!nome) { alert("Digite o nome do produto!"); return; }
+            if (inputImg.files.length > 3) { alert("Escolha no máximo 3 imagens!"); return; }
+
+            document.getElementById('resultado-cadastro').innerText = `Produto "${nome}" salvo com sucesso no navegador!`;
+        }
+
         function ajustarOpcoes() {
             const forma = document.getElementById('forma-pagamento').value;
             document.getElementById('campo-parcelas').style.display = (forma === 'parcelado') ? 'block' : 'none';
         }
 
-        async function gerarPagamento() {
-            const valor = document.getElementById('valor-produto').value || 0;
+        function gerarPagamento() {
+            const valor = parseFloat(document.getElementById('valor-produto').value) || 0;
             if(valor <= 0) { alert("Por favor, digite o valor no produto primeiro!"); return; }
             
             const forma = document.getElementById('forma-pagamento').value;
-            const parcelas = document.getElementById('parcelas').value;
-
-            const response = await fetch(`/processar-pagamento?valor=${valor}&forma=${forma}&parcelas=${parcelas}`);
-            const dados = await response.json();
-
             const div = document.getElementById('resultado-pagamento');
-            
+            div.innerHTML = ""; // Limpa a área anterior
+
             if (forma === 'pix') {
-                div.innerHTML = `<h3>Total: R$ ${dados.valor_final}</h3><p>Escaneie para pagar:</p><img src="${dados.qrcode}" width="200">`;
+                div.innerHTML = `<h3>Total: R$ ${valor.toFixed(2)}</h3><p>Escaneie para pagar:</p><div id="qrcode-box" style="display: flex; justify-content: center; margin: 15px 0;"></div>`;
+                
+                // Texto padrão do PIX copia e cola adaptado dinamicamente com o preço digitado
+                const dadosPix = `00020101021126360014br.gov.bcb.pix0114suachavepix5204000053039865405${valor.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
+                
+                // Desenha o QR code na tela
+                new QRCode(document.getElementById("qrcode-box"), {
+                    text: dadosPix,
+                    width: 180,
+                    height: 180,
+                    colorDark : "#5c4a3c",
+                    colorLight : "#ffffff"
+                });
             } else if (forma === 'parcelado') {
-                div.innerHTML = `<h3>Pedido Parcelado (${dados.parcelas}x)</h3><p>Valor total: R$ ${dados.valor_final}</p><p>Valor por parcela: <strong>R$ ${dados.valor_parcela}</strong></p>`;
+                const numParcelas = parseInt(document.getElementById('parcelas').value);
+                const valorParcela = valor / numParcelas;
+                div.innerHTML = `<h3>Pedido Parcelado (${numParcelas}x)</h3><p>Valor total: R$ ${valor.toFixed(2)}</p><p>Valor por parcela: <strong>R$ ${valorParcela.toFixed(2)}</strong></p>`;
             } else {
-                div.innerHTML = `<h3>Pedido em Espécie</h3><p>Total a pagar em dinheiro: R$ ${dados.valor_final}</p>`;
+                div.innerHTML = `<h3>Pedido em Espécie</h3><p>Total a pagar no balcão: R$ ${valor.toFixed(2)}</p>`;
             }
         }
     </script>
 </body>
 </html>
-"""
-
-# Rota Principal: Carrega a página web
-@app.route('/')
-def home():
-    return render_template_string(HTML_PAGE)
-
-# Rota para receber o cadastro do produto e guardar as 3 imagens
-@app.route('/salvar-produto', methods=['POST'])
-def salvar_produto():
-    nome = request.form.get('nome')
-    preco = request.form.get('preco')
-    imagens = request.files.getlist('imagens')
-
-    if len(imagens) > 3:
-        return "Erro: Você enviou mais do que 3 imagens!", 400
-
-    for img in imagens:
-        if img.filename:
-            img.save(os.path.join(UPLOAD_FOLDER, img.filename))
-
-    return f"<h3>Produto '{nome}' cadastrado com sucesso!</h3><p>Valor: R$ {preco}</p><p>As 3 imagens foram recebidas e salvas no servidor.</p><br><a href='/'>Voltar</a>"
-
-# Rota da API para gerar o QR Code Pix ou calcular as Parcelas
-@app.route('/processar-pagamento', methods=['GET'])
-def processar_pagamento():
-    import qrcode  # Importado aqui para garantir o funcionamento interno
-    valor = float(request.args.get('valor', 0.0))
-    forma = request.args.get('forma', 'pix')
-    parcelas = int(request.args.get('parcelas', 1))
-
-    resposta = {"valor_final": f"{valor:.2f}"}
-
-    if forma == 'pix':
-        # Cria uma string fictícia no padrão Pix BR Code utilizando o valor da compra
-        dados_pix = f"00020101021126360014br.gov.bcb.pix0114suachavepix5204000053039865405{valor:.2f}5802BR5912AuroraPatas6009SaoPaulo62070503***6304"
-        
-        qr = qrcode.QRCode(version=1, box_size=10, border=4)
-        qr.add_data(dados_pix)
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="#5c4a3c", back_color="white") # QR code nas cores do site
-        
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")
-        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-        resposta["qrcode"] = f"data:image/png;base64,{img_str}"
-
-    elif forma == 'parcelado':
-        valor_parcela = valor / parcelas
-        resposta["valor_parcela"] = f"{valor_parcela:.2f}"
-        resposta["parcelas"] = parcelas
-
-    return jsonify(resposta)
-
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
