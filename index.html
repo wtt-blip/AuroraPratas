@@ -296,7 +296,7 @@
             <div class="card-sistema">
                 <h2>Sacola de Pedidos</h2>
                 <ul class="lista-carrinho" id="itens-carrinho-lista">
-                    <li id="sacola-vazia-aviso" style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>
+                    <li style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>
                 </ul>
                 <div class="resumo-linha">
                     <span>Total do Pedido:</span>
@@ -333,6 +333,11 @@
     </div>
 
     <script>
+        /* CONFIGURAÇÕES DO SEU NEGÓCIO ========================== */
+        const MEU_WHATSAPP = "86994010521"; // Digite seu número com DDD aqui (só números)
+        const MINHA_CHAVE_PIX = "12308608358"; // Digite sua chave Pix aqui
+        /* ======================================================= */
+
         let totalCompra = 0;
         let itensNoCarrinho = [];
 
@@ -408,25 +413,17 @@
             painelResultado.style.display = "block";
             painelResultado.innerHTML = ""; 
 
+            let detalhesPagamento = "";
+
             if (metodo === 'pix') {
                 painelResultado.innerHTML = `
                     <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Código QR Code Pix Gerado</h3>
                     <p style="font-size:13px; color:var(--texto-claro);">Valor final: <strong>R$ ${totalCompra.toFixed(2)}</strong></p>
                     <div id="qrcode-output"></div>
-                    <p style="font-size:11px; color:var(--bege-medio);">A confirmação é feita instantaneamente.</p>
+                    <button class="btn-comprar" style="background-color:#25D366; margin-top:10px;" onclick="enviarParaWhatsApp('Pix (QR Code)')">Concluir no WhatsApp 🐾</button>
                 `;
 
-                /* =========================================================================
-                   ONDE EDITAR O PIX: 
-                   Substitua a palavra 'suachavepix' abaixo pela sua chave Pix real.
-                   Exemplos: 
-                   Se for CNPJ: 12345678000199
-                   Se for E-mail: financeiro@aurorapatas.com
-                   ========================================================================= */
-                const minhaChavePix = "12308608358"; 
-
-                // Montagem da estrutura padrão BR Code regulamentada pelo Banco Central
-                const stringPixECommerce = `00020101021126360014br.gov.bcb.pix0114${minhaChavePix}5204000053039865405${totalCompra.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
+                const stringPixECommerce = `00020101021126360014br.gov.bcb.pix0114${MINHA_CHAVE_PIX}5204000053039865405${totalCompra.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
 
                 new QRCode(document.getElementById("qrcode-output"), {
                     text: stringPixECommerce,
@@ -441,18 +438,38 @@
                 const valorDaParcela = totalCompra / parcelas;
                 
                 painelResultado.innerHTML = `
-                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Checkout Concluído</h3>
-                    <p style="font-size:14px; margin: 10px 0 5px;">Plano contratado: <strong>${parcelas}x</strong> sem juros</p>
-                    <p style="font-size:14px; margin: 0;">Valor da Parcela: <strong style="color:#2E7D32;">R$ ${valorDaParcela.toFixed(2)} / mês</strong></p>
-                    <small style="color:var(--texto-claro); display:block; margin-top:10px;">Total consolidado: R$ ${totalCompra.toFixed(2)}</small>
+                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Plano Definido</h3>
+                    <p style="font-size:14px; margin: 10px 0 5px;">Contratado: <strong>${parcelas}x</strong> sem juros</p>
+                    <p style="font-size:14px; margin: 0 0 15px;">Parcela: <strong>R$ ${valorDaParcela.toFixed(2)} / mês</strong></p>
+                    <button class="btn-comprar" style="background-color:#25D366;" onclick="enviarParaWhatsApp('Parcelado em ${parcelas}x')">Concluir no WhatsApp 🐾</button>
                 `;
             } else {
                 painelResultado.innerHTML = `
-                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Pedido Confirmado em Espécie</h3>
-                    <p style="font-size:13px; color:var(--texto-claro);">Separe o valor exato no recebimento do produto.</p>
-                    <p style="font-size:16px; margin: 10px 0 0; font-weight:700;">Total a Pagar: R$ ${totalCompra.toFixed(2)}</p>
+                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Pedido Pronto</h3>
+                    <p style="font-size:13px; color:var(--texto-claro); margin-bottom:15px;">Pagamento em dinheiro na entrega.</p>
+                    <button class="btn-comprar" style="background-color:#25D366;" onclick="enviarParaWhatsApp('Espécie (Dinheiro)')">Concluir no WhatsApp 🐾</button>
                 `;
             }
+        }
+
+        // Nova função que cria o texto estruturado do e-commerce e abre o WhatsApp
+        function enviarParaWhatsApp(formaPagamento) {
+            let listaItensTexto = "";
+            itensNoCarrinho.forEach((item, index) => {
+                listaItensTexto += `${index + 1}. ${item.nome} (R$ ${item.preco.toFixed(2)})\n`;
+            });
+
+            // Constrói a mensagem automática organizada
+            const mensagem = `Olá, AuroraPatas! Gostaria de concluir meu pedido:\n\n` +
+                             `🛒 *PRODUTOS:*\n${listaItensTexto}\n` +
+                             `💰 *FORMA DE PAGAMENTO:* ${formaPagamento}\n` +
+                             `💵 *TOTAL:* R$ ${totalCompra.toFixed(2)}`;
+
+            // Codifica o texto para formato de link de internet
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            
+            // Redireciona o navegador para o WhatsApp
+            window.open(`https://api.whatsapp.com/send?phone=${MEU_WHATSAPP}&text=${mensagemCodificada}`, '_blank');
         }
     </script>
 </body>
