@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - AuroraPatas</title>
+    <style>
+        :root {
+            --bg-principal: #FDFBF7;
+            --bg-card: #FFFFFF;
+            --bege-escuro: #5C4A3C;
+            --bege-claro: #EFEBE4;
+            --texto-escuro: #3D322A;
+        }
+        body { background-color: var(--bg-principal); font-family: sans-serif; padding: 40px 20px; color: var(--texto-escuro); }
+        .box { max-width: 600px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--bege-claro); border-radius: 8px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        h1, h2 { color: var(--bege-escuro); margin-top: 0; text-transform: uppercase; font-size: 20px; border-bottom: 1px solid var(--bege-claro); padding-bottom: 10px; }
+        label { display: block; font-weight: bold; margin: 15px 0 5px; font-size: 14px; }
+        input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #D1C4B6; border-radius: 4px; background: var(--bg-principal); }
+        button { background: var(--bege-escuro); color: white; border: none; padding: 12px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
+        .lista-gerenciar { margin-top: 30px; border-top: 2px solid var(--bege-claro); padding-top: 20px; }
+        .item-gerencia { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--bege-claro); }
+        .btn-excluir { background: #c62828; color: white; padding: 5px 10px; font-size: 12px; border-radius: 3px; width: auto; margin-top: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>Painel Gerenciador AuroraPatas 🐾</h1>
+        <form id="form-cadastro">
+            <label>Nome do Produto:</label>
+            <input type="text" id="nome" placeholder="Ex: Caminha Nuvem" required>
+
+            <label>Preço de Venda (R$):</label>
+            <input type="number" id="preco" step="0.01" placeholder="120.00" required>
+
+            <label>Selecione exatamente 3 imagens do seu computador:</label>
+            <input type="file" id="imagens" accept="image/*" multiple required>
+
+            <button type="button" onclick="salvarProduto()">Cadastrar na Loja</button>
+        </form>
+
+        <div class="lista-gerenciar">
+            <h2>Produtos Ativos na Loja</h2>
+            <div id="lista-produtos"></div>
+        </div>
+    </div>
+
+    <script>
+        function salvarProduto() {
+            const nome = document.getElementById('nome').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const inputImagens = document.getElementById('imagens');
+
+            if (!nome || isNaN(preco)) { alert("Preencha os campos!"); return; }
+            if (inputImagens.files.length !== 3) { alert("Escolha exatamente 3 imagens!"); return; }
+
+            // Converte os arquivos em links em formato base64 legíveis pelo navegador
+            let imagensLidas = [];
+            let arquivosCarregados = 0;
+
+            for (let i = 0; i < 3; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagensLidas.push(e.target.result);
+                    arquivosCarregados++;
+                    
+                    if (arquivosCarregados === 3) {
+                        finalizarSalvamento(nome, preco, imagensLidas);
+                    }
+                }
+                reader.readAsDataURL(inputImagens.files[i]);
+            }
+        }
+
+        function finalizarSalvamento(nome, preco, imagens) {
+            const produtosAtuais = JSON.parse(localStorage.getItem('produtos_aurorapatas')) || [];
+            
+            const novoProduto = {
+                id: Date.now(),
+                nome: nome,
+                preco: preco,
+                img0: imagens[0],
+                img1: imagens[1],
+                img2: imagens[2]
+            };
+
+            produtosAtuais.push(novoProduto);
+            localStorage.setItem('produtos_aurorapatas', JSON.stringify(produtosAtuais));
+            
+            alert(`Produto "${nome}" publicado com sucesso!`);
+            document.getElementById('form-cadastro').reset();
+            listarProdutosNoPainel();
+        }
+
+        function listarProdutosNoPainel() {
+            const container = document.getElementById('lista-produtos');
+            const produtos = JSON.parse(localStorage.getItem('produtos_aurorapatas')) || [];
+            
+            container.innerHTML = "";
+            if(produtos.length === 0) {
+                container.innerHTML = "<p style='color:gray;'>Nenhum produto cadastrado.</p>";
+                return;
+            }
+
+            produtos.forEach(p => {
+                container.innerHTML += `
+                    <div class="item-gerencia">
+                        <span><strong>${p.nome}</strong> - R$ ${p.preco.toFixed(2)}</span>
+                        <button class="btn-excluir" onclick="excluirProduto(${p.id})">Excluir</button>
+                    </div>
+                `;
+            });
+        }
+
+        function excluirProduto(id) {
+            let produtos = JSON.parse(localStorage.getItem('produtos_aurorapatas')) || [];
+            produtos = produtos.filter(p => p.id !== id);
+            localStorage.setItem('produtos_aurorapatas', JSON.stringify(produtos));
+            listarProdutosNoPainel();
+        }
+
+        window.onload = listarProdutosNoPainel;
+    </script>
+</body>
+</html>
