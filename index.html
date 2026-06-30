@@ -3,179 +3,556 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraPatas - Pet Shop</title>
+    <title>AuroraPatas - Loja Oficial</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <style>
-        /* Cores: Bege (#F5F2EB, #5c4a3c) e Branco (#FFFFFF) */
+        /* PALETA DE CORES: Tons de Bege Suave, Nude, Fendi e Branco Puro */
+        :root {
+            --bg-principal: #FDFBF7;
+            --bg-card: #FFFFFF;
+            --bege-escuro: #5C4A3C;
+            --bege-medio: #A38F7D;
+            --bege-claro: #EFEBE4;
+            --bege-destaque: #D1C4B6;
+            --texto-escuro: #3D322A;
+            --texto-claro: #7A6E65;
+        }
+
         body {
-            background-color: #F5F2EB;
+            background-color: var(--bg-principal);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #4A4A4A;
+            color: var(--texto-escuro);
             margin: 0;
             padding: 0;
         }
-        header {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: center;
+
+        /* BARRA DE AVISOS (Topo clássico de e-commerce) */
+        .barra-aviso {
+            background-color: var(--bege-escuro);
+            color: #FFFFFF;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        .logo-container {
+
+        /* CABEÇALHO DA LOJA */
+        header {
+            background-color: #FFFFFF;
+            padding: 25px 5%;
+            box-shadow: 0 2px 10px rgba(92, 74, 60, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--bege-claro);
+        }
+
+        /* LOGOTIPO ARTÍSTICO COM AS INICIAIS 'A' e 'P' EM CSS MONOGRAMA */
+        .logo-box {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        /* Logo Bonita com as Iniciais A e P */
-        .logo-circle {
-            background: linear-gradient(135deg, #dfcbb5, #f5f2eb);
-            color: #5c4a3c;
-            font-size: 24px;
-            font-weight: bold;
-            width: 55px;
-            height: 55px;
+        .monograma-ap {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            background: #FFFFFF;
+            border: 2px solid var(--bege-escuro);
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #5c4a3c;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 0 3px var(--bege-claro);
         }
-        .brand-name {
-            font-size: 26px;
+        /* Desenho estilizado da letra A */
+        .monograma-ap::before {
+            content: "A";
+            font-family: 'Georgia', serif;
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--bege-escuro);
+            position: absolute;
+            transform: translate(-6px, -4px);
+        }
+        /* Desenho estilizado da letra P entrelaçada */
+        .monograma-ap::after {
+            content: "P";
+            font-family: 'Georgia', serif;
+            font-size: 28px;
             font-weight: bold;
-            color: #5c4a3c;
-            letter-spacing: 1px;
+            color: var(--bege-medio);
+            position: absolute;
+            transform: translate(6px, 4px);
+            mix-blend-mode: multiply;
         }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
+        .texto-logo {
+            display: flex;
+            flex-direction: column;
+        }
+        .marca-nome {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--bege-escuro);
+            text-transform: uppercase;
+        }
+        .marca-sub {
+            font-size: 11px;
+            color: var(--bege-medio);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* LAYOUT PRINCIPAL DO E-COMMERCE */
+        .layout-loja {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 30px;
+        }
+
+        /* PAINEL DE CADASTRO E VITRINE */
+        .secao-produtos {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card-sistema {
+            background-color: var(--bg-card);
+            border: 1px solid var(--bege-claro);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(92, 74, 60, 0.02);
+        }
+
+        .card-sistema h2 {
+            margin-top: 0;
+            color: var(--bege-escuro);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--bege-claro);
+            padding-bottom: 10px;
+        }
+
+        /* FORMULÁRIO DE CADASTRO */
+        .grid-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 0 20px;
+            gap: 15px;
         }
-        .card {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            border: 1px solid #e1dcd6;
+        .campo-total { grid-column: span 2; }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--texto-escuro);
         }
-        h2 { color: #5c4a3c; margin-top: 0; }
-        label { display: block; margin: 15px 0 5px; font-weight: 600; }
         input, select {
-            width: 100%; padding: 10px; border: 1px solid #dcd6cd;
-            border-radius: 6px; background-color: #faf9f6; box-sizing: border-box;
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--bege-destaque);
+            border-radius: 4px;
+            background-color: var(--bg-principal);
+            color: var(--texto-escuro);
+            box-sizing: border-box;
+            font-size: 14px;
         }
-        .btn {
-            background-color: #5c4a3c; color: white; padding: 12px; border: none;
-            border-radius: 6px; width: 100%; margin-top: 20px; cursor: pointer;
-            font-size: 16px; transition: background 0.3s;
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--bege-escuro);
         }
-        .btn:hover { background-color: #7a634e; }
-        .resultado { margin-top: 20px; text-align: center; padding: 15px; background-color: #fcfbfa; border-radius: 6px; }
+
+        /* VITRINE DE PRODUTOS */
+        .vitrine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .produto-item {
+            background: #FFFFFF;
+            border: 1px solid var(--bege-claro);
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .produto-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(92, 74, 60, 0.06);
+        }
+
+        /* CARROSSEL/MINIATURAS DE IMAGENS DO PRODUTO */
+        .container-imagens-produto {
+            width: 100%;
+            height: 150px;
+            background: var(--bege-claro);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .preview-img-principal {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .miniaturas-linha {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .miniatura-ponto {
+            width: 25px;
+            height: 25px;
+            border: 1px solid var(--bege-destaque);
+            border-radius: 3px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .prod-nome {
+            font-weight: 600;
+            font-size: 15px;
+            margin: 8px 0 4px;
+            color: var(--texto-escuro);
+        }
+        .prod-preco {
+            color: var(--bege-escuro);
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* BOTÕES ESTILIZADOS */
+        .btn-comprar {
+            background-color: var(--bege-escuro);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+        }
+        .btn-comprar:hover {
+            background-color: #45372C;
+        }
+
+        /* CARRINHO E CHECKOUT LATERAL (Padrão e-commerce de pedidos) */
+        .checkout-lateral {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .lista-carrinho {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--bege-claro);
+        }
+        .resumo-linha {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--bege-claro);
+            color: var(--bege-escuro);
+        }
+
+        /* ÁREA DE RESULTADO DO PAGAMENTO */
+        .painel-pagamento {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg-principal);
+            border: 1px solid var(--bege-destaque);
+            border-radius: 6px;
+            text-align: center;
+        }
+        #qrcode-output {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        /* Layout responsivo móvel */
+        @media (max-width: 850px) {
+            .layout-loja { grid-template-columns: 1fr; }
+            .grid-form { grid-template-columns: 1fr; }
+            .campo-total { grid-column: span 1; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="barra-aviso">
+        🐾 Frete Fixo Especial para toda a linha AuroraPatas — Aproveite!
+    </div>
+
     <header>
-        <div class="logo-container">
-            <div class="logo-circle">AP</div>
-            <span class="brand-name">AuroraPatas</span>
+        <div class="logo-box">
+            <div class="monograma-ap"></div>
+            <div class="texto-logo">
+                <span class="marca-nome">AuroraPatas</span>
+                <span class="marca-sub">Boutique & Artigos</span>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <section class="card">
-            <h2>Adicionar Produto</h2>
-            <form id="form-produto">
-                <label>Nome do Produto:</label>
-                <input type="text" id="nome-produto" required>
+    <div class="layout-loja">
+        
+        <main class="secao-produtos">
+            
+            <section class="card-sistema">
+                <h2>Painel Administrativo: Adicionar Produto</h2>
+                <form id="cadastro-form">
+                    <div class="grid-form">
+                        <div>
+                            <label for="nome">Nome do Produto:</label>
+                            <input type="text" id="nome" placeholder="Ex: Caminha Soft Luxo" required>
+                        </div>
+                        <div>
+                            <label for="preco">Valor de Venda (R$):</label>
+                            <input type="number" id="preco" step="0.01" placeholder="99.90" required>
+                        </div>
+                        <div class="campo-total">
+                            <label>Imagens do Produto (Selecione 3 arquivos de imagem de uma vez):</label>
+                            <input type="file" id="imagens" accept="image/*" multiple required>
+                        </div>
+                    </div>
+                    <button type="button" onclick="adicionarProdutoAoCatalogo()" class="btn-comprar" style="margin-top: 15px;">
+                        Publicar na Loja
+                    </button>
+                </form>
+            </section>
 
-                <label>Valor (R$):</label>
-                <input type="number" id="valor-produto" step="0.01" required>
+            <section class="card-sistema">
+                <h2>Vitrine de Produtos</h2>
+                <div class="vitrine-grid" id="vitrine">
+                    <div class="produto-item">
+                        <div class="container-imagens-produto">
+                            <span style="color:var(--bege-medio); font-size:12px;">Imagem do Produto</span>
+                        </div>
+                        <div class="prod-nome">Coleira Aurora Elegance</div>
+                        <div class="prod-preco">R$ 45.00</div>
+                        <button class="btn-comprar" onclick="adicionarAoCarrinho('Coleira Aurora Elegance', 45.00)">Selecionar</button>
+                    </div>
+                    <div class="produto-item">
+                        <div class="container-imagens-produto">
+                            <span style="color:var(--bege-medio); font-size:12px;">Imagem do Produto</span>
+                        </div>
+                        <div class="prod-nome">Comedouro Duplo Cerâmica</div>
+                        <div class="prod-preco">R$ 120.00</div>
+                        <button class="btn-comprar" onclick="adicionarAoCarrinho('Comedouro Duplo Cerâmica', 120.00)">Selecionar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-                <label>Imagens do Produto (Máx 3):</label>
-                <input type="file" id="imagens-produto" accept="image/*" multiple required>
+        <aside class="checkout-lateral">
+            
+            <div class="card-sistema">
+                <h2>Sacola de Pedidos</h2>
+                <ul class="lista-carrinho" id="itens-carrinho-lista">
+                    <li style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>
+                </ul>
+                
+                <div class="resumo-linha">
+                    <span>Total do Pedido:</span>
+                    <span id="valor-total-carrinho">R$ 0,00</span>
+                </div>
+            </div>
 
-                <button type="button" onclick="simularCadastro()" class="btn">Cadastrar Produto</button>
-            </form>
-            <div id="resultado-cadastro" style="margin-top: 15px; color: green; font-weight: bold; text-align: center;"></div>
-        </section>
-
-        <section class="card">
-            <h2>Realizar Pedido</h2>
-            <form id="form-pedido">
-                <label>Forma de Pagamento:</label>
-                <select id="forma-pagamento" onchange="ajustarOpcoes()">
-                    <option value="pix">Pix (QR Code)</option>
-                    <option value="especie">Espécie (Dinheiro)</option>
-                    <option value="parcelado">Parcelado (Até 4x)</option>
+            <div class="card-sistema">
+                <h2>Forma de Pagamento</h2>
+                <label for="metodo-pagamento">Selecione como deseja pagar:</label>
+                <select id="metodo-pagamento" onchange="alternarCamposParcelamento()">
+                    <option value="pix">Pix (QR Code Automático)</option>
+                    <option value="especie">Espécie (Pagamento na Entrega)</option>
+                    <option value="parcelado">Parcelado (Até 4x sem juros)</option>
                 </select>
 
-                <div id="campo-parcelas" style="display:none;">
-                    <label>Quantidade de Parcelas:</label>
-                    <select id="parcelas">
-                        <option value="1">1x (Sem juros)</option>
-                        <option value="2">2x (Sem juros)</option>
-                        <option value="3">3x (Sem juros)</option>
-                        <option value="4">4x (Sem juros)</option>
+                <div id="wrapper-parcelas" style="display: none; margin-top: 15px;">
+                    <label for="qtd-parcelas">Número de parcelas:</label>
+                    <select id="qtd-parcelas">
+                        <option value="1">1x sem juros</option>
+                        <option value="2">2x sem juros</option>
+                        <option value="3">3x sem juros</option>
+                        <option value="4">4x sem juros</option>
                     </select>
                 </div>
 
-                <button type="button" onclick="gerarPagamento()" class="btn">Finalizar Pedido</button>
-            </form>
+                <button type="button" class="btn-comprar" style="margin-top: 20px; background-color: #45372C;" onclick="fecharPedidoLoja()">
+                    Fechar e Gerar Pagamento
+                </button>
 
-            <div id="resultado-pagamento" class="resultado"></div>
-        </section>
+                <div id="checkout-resultado" style="display: none;" class="painel-pagamento"></div>
+            </div>
+        </aside>
     </div>
 
     <script>
-        function simularCadastro() {
-            const nome = document.getElementById('nome-produto').value;
-            const inputImg = document.getElementById('imagens-produto');
-            
-            if (!nome) { alert("Digite o nome do produto!"); return; }
-            if (inputImg.files.length > 3) { alert("Escolha no máximo 3 imagens!"); return; }
+        // Estrutura de dados interna para simular o banco de dados da loja
+        let totalCompra = 0;
+        let itensNoCarrinho = [];
 
-            document.getElementById('resultado-cadastro').innerText = `Produto "${nome}" salvo com sucesso no navegador!`;
+        // Função do painel administrativo para adicionar produtos com visualização de imagens
+        function adicionarProdutoAoCatalogo() {
+            const nome = document.getElementById('nome').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const inputImagens = document.getElementById('imagens');
+
+            if (!nome || isNaN(preco)) {
+                alert("Por favor, preencha corretamente os dados do produto.");
+                return;
+            }
+            if (inputImagens.files.length !== 3) {
+                alert("Selecione exatamente 3 arquivos de imagem para este produto.");
+                return;
+            }
+
+            // Captura os arquivos de imagem convertendo para ObjectURLs temporárias para exibição em tela
+            const imgUrls = [];
+            for(let i=0; i<3; i++) {
+                imgUrls.push(URL.createObjectURL(inputImagens.files[i]));
+            }
+
+            const vitrine = document.getElementById('vitrine');
+            
+            // Renderiza o novo produto estruturado com carrossel tático de miniaturas no catálogo
+            const produtoHTML = `
+                <div class="produto-item">
+                    <div class="container-imagens-produto">
+                        <img src="${imgUrls[0]}" id="main-img-${nome.replace(/\s+/g, '')}" class="preview-img-principal" alt="${nome}">
+                    </div>
+                    <div class="miniaturas-linha">
+                        <img src="${imgUrls[0]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[0]}'">
+                        <img src="${imgUrls[1]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[1]}'">
+                        <img src="${imgUrls[2]}" class="miniatura-ponto" onclick="document.getElementById('main-img-${nome.replace(/\s+/g, '')}').src='${imgUrls[2]}'">
+                    </div>
+                    <div class="prod-nome">${nome}</div>
+                    <div class="prod-preco">R$ ${preco.toFixed(2)}</div>
+                    <button class="btn-comprar" onclick="adicionarAoCarrinho('${nome}', ${preco})">Selecionar</button>
+                </div>
+            `;
+
+            vitrine.insertAdjacentHTML('beforeend', produtoHTML);
+            document.getElementById('cadastro-form').reset();
         }
 
-        function ajustarOpcoes() {
-            const forma = document.getElementById('forma-pagamento').value;
-            document.getElementById('campo-parcelas').style.display = (forma === 'parcelado') ? 'block' : 'none';
+        // Adiciona itens selecionados à sacola lateral
+        function adicionarAoCarrinho(nome, preco) {
+            itensNoCarrinho.push({nome, preco});
+            atualizarInterfaceCarrinho();
         }
 
-        function gerarPagamento() {
-            const valor = parseFloat(document.getElementById('valor-produto').value) || 0;
-            if(valor <= 0) { alert("Por favor, digite o valor no produto primeiro!"); return; }
-            
-            const forma = document.getElementById('forma-pagamento').value;
-            const div = document.getElementById('resultado-pagamento');
-            div.innerHTML = ""; // Limpa a área anterior
+        // Re-renderiza o estado da sacola de compras
+        function atualizarInterfaceCarrinho() {
+            const lista = document.getElementById('itens-carrinho-lista');
+            lista.innerHTML = "";
+            totalCompra = 0;
 
-            if (forma === 'pix') {
-                div.innerHTML = `<h3>Total: R$ ${valor.toFixed(2)}</h3><p>Escaneie para pagar:</p><div id="qrcode-box" style="display: flex; justify-content: center; margin: 15px 0;"></div>`;
-                
-                // Texto padrão do PIX copia e cola adaptado dinamicamente com o preço digitado
-                const dadosPix = `00020101021126360014br.gov.bcb.pix0114suachavepix5204000053039865405${valor.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
-                
-                // Desenha o QR code na tela
-                new QRCode(document.getElementById("qrcode-box"), {
-                    text: dadosPix,
-                    width: 180,
-                    height: 180,
-                    colorDark : "#5c4a3c",
-                    colorLight : "#ffffff"
+            if(itensNoCarrinho.length === 0) {
+                lista.innerHTML = `<li style="color: var(--bege-medio); text-align: center; font-size: 13px; padding: 20px 0;">Sua sacola está vazia</li>`;
+                document.getElementById('valor-total-carrinho').innerText = "R$ 0,00";
+                return;
+            }
+
+            itensNoCarrinho.forEach(item => {
+                totalCompra += item.preco;
+                lista.innerHTML += `
+                    <li class="item-carrinho">
+                        <span>${item.nome}</span>
+                        <strong>R$ ${item.preco.toFixed(2)}</strong>
+                    </li>
+                `;
+            });
+
+            document.getElementById('valor-total-carrinho').innerText = `R$ ${totalCompra.toFixed(2)}`;
+        }
+
+        // Monitora as opções do seletor de pagamento
+        function alternarCamposParcelamento() {
+            const metodo = document.getElementById('metodo-pagamento').value;
+            document.getElementById('wrapper-parcelas').style.display = (metodo === 'parcelado') ? 'block' : 'none';
+        }
+
+        // Processa o fechamento de checkout simulando regras de servidores de e-commerce
+        function fecharPedidoLoja() {
+            if (totalCompra <= 0) {
+                alert("Sua sacola de compras está vazia! Adicione ou selecione produtos primeiro.");
+                return;
+            }
+
+            const metodo = document.getElementById('metodo-pagamento').value;
+            const painelResultado = document.getElementById('checkout-resultado');
+            
+            painelResultado.style.display = "block";
+            painelResultado.innerHTML = ""; // Reseta renderização prévia
+
+            if (metodo === 'pix') {
+                painelResultado.innerHTML = `
+                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Código QR Code Pix Gerado</h3>
+                    <p style="font-size:13px; color:var(--texto-claro);">Valor final: <strong>R$ ${totalCompra.toFixed(2)}</strong></p>
+                    <div id="qrcode-output"></div>
+                    <p style="font-size:11px; color:var(--bege-medio);">A confirmação é feita instantaneamente pelo sistema AuroraPatas.</p>
+                `;
+
+                // String criptografada padrão EMV/BR Code para PIX Estático dinâmico baseada no valor total acumulado
+                const stringPixECommerce = `00020101021126360014br.gov.bcb.pix0114suachavepix5204000053039865405${totalCompra.toFixed(2)}5802BR5912AuroraPatas6009SaoPaulo62070503***6304`;
+
+                // Geração em tela utilizando a biblioteca externa
+                new QRCode(document.getElementById("qrcode-output"), {
+                    text: stringPixECommerce,
+                    width: 150,
+                    height: 150,
+                    colorDark : "#5C4A3C",
+                    colorLight : "#FFFFFF"
                 });
-            } else if (forma === 'parcelado') {
-                const numParcelas = parseInt(document.getElementById('parcelas').value);
-                const valorParcela = valor / numParcelas;
-                div.innerHTML = `<h3>Pedido Parcelado (${numParcelas}x)</h3><p>Valor total: R$ ${valor.toFixed(2)}</p><p>Valor por parcela: <strong>R$ ${valorParcela.toFixed(2)}</strong></p>`;
+
+            } else if (metodo === 'parcelado') {
+                const parcelas = parseInt(document.getElementById('qtd-parcelas').value);
+                const valorDaParcela = totalCompra / parcelas;
+                
+                painelResultado.innerHTML = `
+                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Checkout Concluído</h3>
+                    <p style="font-size:14px; margin: 10px 0 5px;">Plano contratado: <strong>${parcelas}x</strong> sem juros</p>
+                    <p style="font-size:14px; margin: 0;">Valor da Parcela: <strong style="color:#2E7D32;">R$ ${valorDaParcela.toFixed(2)} / mês</strong></p>
+                    <small style="color:var(--texto-claro); display:block; margin-top:10px;">Total consolidado: R$ ${totalCompra.toFixed(2)}</small>
+                `;
             } else {
-                div.innerHTML = `<h3>Pedido em Espécie</h3><p>Total a pagar no balcão: R$ ${valor.toFixed(2)}</p>`;
+                painelResultado.innerHTML = `
+                    <h3 style="margin:0; font-size:15px; color:var(--bege-escuro);">Pedido Confirmado em Espécie</h3>
+                    <p style="font-size:13px; color:var(--texto-claro);">Separe o valor exato no recebimento do produto.</p>
+                    <p style="font-size:16px; margin: 10px 0 0; font-weight:700;">Total a Pagar: R$ ${totalCompra.toFixed(2)}</p>
+                `;
             }
         }
     </script>
